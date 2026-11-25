@@ -33,6 +33,16 @@ class InputError(ValueError):
     """Identify an unreadable export or invalid record by its location."""
 
 
+def parse_date(value: str) -> date:
+    """Parse a YYYY-MM-DD calendar date or raise a descriptive ValueError."""
+    if not DATE_PATTERN.fullmatch(value):
+        raise ValueError("ожидается дата в формате YYYY-MM-DD")
+    try:
+        return date.fromisoformat(value)
+    except ValueError:
+        raise ValueError("календарная дата не существует") from None
+
+
 def _error(path: Path, line: int, field: str, message: str) -> InputError:
     return InputError(f"{path.name}:{line}: {field}: {message}")
 
@@ -81,12 +91,10 @@ class _CsvRow:
         return self._parse_date(field, value) if value else None
 
     def _parse_date(self, field: str, value: str) -> date:
-        if not DATE_PATTERN.fullmatch(value):
-            raise self.error(field, "ожидается дата в формате YYYY-MM-DD")
         try:
-            return date.fromisoformat(value)
-        except ValueError:
-            raise self.error(field, "календарная дата не существует") from None
+            return parse_date(value)
+        except ValueError as error:
+            raise self.error(field, str(error)) from None
 
     def status(self, choices: type[StatusType]) -> StatusType:
         value = self.required("status")
