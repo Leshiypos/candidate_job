@@ -1,0 +1,34 @@
+# Локальные секреты и настройки
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+secrets.*
+.aws/
+.ssh/
+.codex/
+.claude/
+.idea/
+.vscode/
+
+# Исходные экспорты сессий и временные результаты
+private/
+transcripts/
+output/
+dist/
+*.zip
+*.tar
+*.tar.gz
+
+# Python и ОС
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
